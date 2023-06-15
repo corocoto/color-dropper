@@ -1,5 +1,4 @@
 import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
-import { JSX } from 'react/jsx-runtime';
 import {CanvasProps} from "../../Canvas.types";
 import {withCanvasProps} from "./withImage.types";
 
@@ -7,13 +6,15 @@ import {withCanvasProps} from "./withImage.types";
 const imageInstance = new Image();
 
 
-const withImage = (WrappedComponent: (props: CanvasProps) => JSX.Element) => {
+const withImage = (WrappedComponent: React.ForwardRefExoticComponent<React.PropsWithoutRef<CanvasProps> & React.RefAttributes<HTMLCanvasElement>>) => {
     const Component = (props: withCanvasProps) => {
         const {imageSrc, ...rest} = props;
 
         // State
         const [image, setImage] = useState<HTMLImageElement | null>(null);
 
+        // Refs
+        const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
         //Handlers
         const handleImageLoad = useCallback((event: Event) => {
@@ -31,7 +32,9 @@ const withImage = (WrappedComponent: (props: CanvasProps) => JSX.Element) => {
             }
         }, [handleImageLoad, imageSrc])
 
-        return <WrappedComponent image={image} {...rest} />
+        console.log(canvasRef)
+
+        return <WrappedComponent ref={canvasRef} image={image} {...rest} />
     }
 
     return memo(Component);
