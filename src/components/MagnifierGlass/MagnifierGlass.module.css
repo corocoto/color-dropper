@@ -1,0 +1,19 @@
+.magnifierGlass {
+    position: absolute;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    background-repeat: no-repeat;
+    border: 3px solid #8a3033;
+    cursor: none;
+}
+
+.grid {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    opacity: 0.2;
+    background-image:  linear-gradient(#313133 0.6px, transparent 0.6px), linear-gradient(to right, #313133 0.6px, #ffffff 0.6px);
+    background-size: 12px 12px;
+}
