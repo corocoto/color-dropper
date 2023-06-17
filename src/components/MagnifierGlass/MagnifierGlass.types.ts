@@ -3,4 +3,5 @@ export type MagnifierGlassProps = {
     zoom: number;
     imageWidth: number;
     imageHeight: number;
+    [key: string]: unknown;
 }

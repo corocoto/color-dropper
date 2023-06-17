@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useState} from 'react';
+import React, {memo} from 'react';
 
 // Styles
 import styles from './IconButton.module.css';
@@ -6,22 +6,17 @@ import styles from './IconButton.module.css';
 // Libs
 import classNames from "classnames";
 
-const IconButton = (props: { [x: string]: any; icon: any; alt: any; }) => {
-    const {icon, alt, className, ...rest} = props;
+// Type definition
+import {IconButtonProps} from "./IconButton.types";
 
-    // State
-    const [isActive, setIsActive] = useState(false);
-
-    const handleButtonClick = useCallback(() => {
-        setIsActive(prevState => !prevState)
-    }, [])
+const IconButton = (props: IconButtonProps) => {
+    const {icon, alt, isActive, ...rest} = props;
 
     return (
         <button
-            className={classNames(className, styles.button, {
+            className={classNames(styles.button, {
                 [styles.button_isActive]: isActive
             })}
-            onClick={handleButtonClick}
             {...rest}
         >
             <img src={icon} alt={alt}/>

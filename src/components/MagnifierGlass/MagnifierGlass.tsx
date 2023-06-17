@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from "react";
+import React, {forwardRef, memo, useMemo} from "react";
 
 // Styles
 import styles from './MagnifierGlass.module.css';
@@ -6,8 +6,8 @@ import styles from './MagnifierGlass.module.css';
 // Type definition
 import {MagnifierGlassProps} from "./MagnifierGlass.types";
 
-const MagnifierGlass = (props: MagnifierGlassProps) => {
-    const {imageSource, zoom, imageWidth, imageHeight} = props;
+const MagnifierGlass = forwardRef<HTMLDivElement, MagnifierGlassProps>((props, divRef) => {
+    const {imageSource, zoom, imageWidth, imageHeight, ...rest} = props;
 
     // Memoized values
     const inlineStyles = useMemo(() => {
@@ -19,11 +19,11 @@ const MagnifierGlass = (props: MagnifierGlassProps) => {
     }, [imageHeight, imageSource, imageWidth, zoom]);
 
     return (
-        <div style={inlineStyles} className={styles.magnifierGlass}>
+        <div ref={divRef} style={inlineStyles} className={styles.magnifierGlass} {...rest}>
             <div className={styles.grid}></div>
         </div>
     )
-}
+})
 
 MagnifierGlass.displayName = 'MagnifierGlass';
 
