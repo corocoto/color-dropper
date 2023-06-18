@@ -1,4 +1,4 @@
-import React, { useState, memo, useCallback, useEffect, useRef } from 'react';
+import React, { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
 
 // Component
 import { MagnifierGlass, IconButton } from '../index';
@@ -13,9 +13,10 @@ import {ColorDropperProps, UpdateGlassPosition} from './ColorDropper.types';
 import { rgbToHex, getGlassCoordinates } from './utils';
 
 // Constants
-import { ESC_BUTTON_NAME } from './constants';
+import { ESC_BUTTON_NAME, PICK_COLOR_EVENT_NAME } from './constants';
 
 // Styles
+import styles from './ColorDropper.module.css'
 import variables from './components/MagnifierGlass/MagnifierGlassVariables.module.css'
 
 // HOCs
@@ -23,14 +24,20 @@ import { withCanvasSize } from './hocs';
 
 // Libs
 import compose from 'lodash/fp/compose';
+import debounce from 'lodash/debounce';
 
 const borderWidth = parseFloat(variables.glassBorderWidth);
+const pickColorEvent = new CustomEvent(PICK_COLOR_EVENT_NAME, {
+    detail: { selectedColor: '' }
+});
 
 const ColorDropper = (props: ColorDropperProps) => {
     const { zoom, zoomingImage, canvasRef, canvasSize } = props
 
     // State
     const [isActive, setIsActive] = useState(false);
+    const [hoveredColor, setHoveredColor] = useState<string | null>(null);
+    const [selectedColor, setSelectedColor] = useState<string | null>(null)
 
     // Refs
     const glassRef = useRef<HTMLDivElement>(null);
@@ -64,18 +71,35 @@ const ColorDropper = (props: ColorDropperProps) => {
         });
         updateGlassPosition({ glass: glassRef.current, updatedX: x, updatedY: y, glassRadius });
 
-        const [r, g, b,] = ctxRef.current.getImageData(x * 1.97, y  * 2.13, 1, 1).data;
+        const [r, g, b,] = ctxRef.current.getImageData(x * 1.99, y  * 2.09, 1, 1).data;
         const hexColor = rgbToHex(r, g, b);
-        glassRef.current.style.border = `2px solid ${hexColor}`;
+
+        glassRef.current.style.setProperty('--border-color', hexColor);
+        setHoveredColor(hexColor);
     }, [canvasRef, canvasSize, updateGlassPosition, zoom]);
+
+    const handleDebouncedMove = useMemo(() => debounce(handleMove, 10), [handleMove]);
+
+    const handleGlassClick = useCallback(() => {
+        setSelectedColor(hoveredColor);
+    }, [hoveredColor])
 
     const handleCloseGlassByKeyPress = useCallback((event: KeyboardEvent) => {
         if(event.code === ESC_BUTTON_NAME) {
             setIsActive(false);
         }
-    }, [])
+    }, []);
 
     // Effects
+    useEffect(() => {
+        pickColorEvent.detail.selectedColor = selectedColor as string;
+        window.dispatchEvent(pickColorEvent);
+    }, [selectedColor])
+
+    useEffect(() => {
+        !isActive && setHoveredColor(null);
+    }, [isActive])
+
     useEffect(() => {
         ctxRef.current = canvasRef.current?.getContext('2d', { willReadFrequently: true }) ?? null;
     }, [canvasRef]);
@@ -87,17 +111,19 @@ const ColorDropper = (props: ColorDropperProps) => {
         }
     }, [handleCloseGlassByKeyPress]);
 
+
     useEffect(() => {
         const canvas = canvasRef.current;
 
-        canvas?.addEventListener('mousemove', handleMove);
-        canvas?.addEventListener('touchmove', handleMove);
+        canvas?.addEventListener('mousemove', handleDebouncedMove);
+        canvas?.addEventListener('touchmove', handleDebouncedMove);
 
         return () => {
-            canvas?.removeEventListener('mousemove', handleMove);
-            canvas?.removeEventListener('touchmove', handleMove);
+            canvas?.removeEventListener('mousemove', handleDebouncedMove);
+            canvas?.removeEventListener('touchmove', handleDebouncedMove);
         }
-    }, [canvasRef, handleMove]);
+    }, [canvasRef, handleDebouncedMove]);
+
 
     return (
         <>
@@ -109,9 +135,12 @@ const ColorDropper = (props: ColorDropperProps) => {
                     zoom={zoom}
                     imageWidth={canvasSize.width}
                     imageHeight={canvasSize.height}
-                    onMouseMove={handleMove}
-                    onTouchMove={handleMove}
-                />
+                    onMouseMove={handleDebouncedMove}
+                    onTouchMove={handleDebouncedMove}
+                    onClick={handleGlassClick}
+                >
+                    <span className={styles.hoveredColor}>{hoveredColor}</span>
+                </MagnifierGlass>
             )}
         </>
     );

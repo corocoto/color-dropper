@@ -6,32 +6,31 @@
     width: 150px;
     height: 150px;
     background-repeat: no-repeat;
-    cursor: pointer;
-    border: var(--glass-border-width) solid var(--magnifier-glass-border-color, --black);
+    cursor: none;
+    border: var(--glass-border-width) solid var(--border-color, var(--black));
+    text-align: center;
 }
 
 .magnifierGlass::before {
     position: relative;
     display: block;
     content: '';
-    width: 150px;
-    height: 150px;
+    width: calc(150px - var(--glass-border-width));
+    height: calc(150px - var(--glass-border-width));
     border-radius: 50%;
     background-color: var(--white);
     opacity: 0.2;
-    background-image:  linear-gradient(var(--dark-grey) 0.6px, transparent 0.6px), linear-gradient(to right, var(--dark-grey) 0.6px, var(--white) 0.6px);
-    background-size: 8px 8px;
+    background-image: linear-gradient(var(--dark-grey) 0.6px, transparent 0.6px), linear-gradient(to right, var(--dark-grey) 0.6px, var(--white) 0.6px);
+    background-size: 10px 10px;
 }
 
-/*.magnifierGlass::after {*/
-/*    left: -4px;*/
-/*    top: -1px;*/
-/*    position: absolute;*/
-/*    display: block;*/
-/*    content: '';*/
-/*    background-repeat: no-repeat;*/
-/*    width: 160px;*/
-/*    height: 160px;*/
-/*    background-size: cover;*/
-/*    background-image: url("assets/Selected Color.svg");*/
-/*}*/
+.magnifierGlass::after {
+    left: calc(50% - 1px);
+    top: calc(50% - 1px);
+    position: absolute;
+    content: '';
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--white);
+    box-sizing: border-box;
+}

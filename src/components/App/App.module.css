@@ -5,11 +5,15 @@
     width: 50vw;
     height: 50vh;
     position: relative;
+    text-align: center;
 }
 
 .header {
     position: relative;
     float: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .canvas {
