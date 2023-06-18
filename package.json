@@ -2,6 +2,19 @@
   "name": "color-dropper",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/corocoto/color-dropper.git"
+  },
+  "keywords": [
+    "color-dropper",
+    "canvas"
+  ],
+  "author": "Artem Gusev <corocoto.art@gmail.com> (corocoto)",
+  "bugs": {
+    "url": "https://github.com/corocoto/color-dropper/issues"
+  },
+  "homepage": "https://github.com/corocoto/color-dropper",
   "dependencies": {
     "@babel/core": "^7.16.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
@@ -67,19 +80,29 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "tsc:check": "tsc -p tsconfig.json --noEmit",
+    "eslint-fix": "eslint --fix --ext .js,.jsx,.ts,.tsx .",
+    "eslint-check": "eslint --ext .js,.jsx,.ts,.tsx ."
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
+    ],
+    "ignorePatterns": [
+      "scripts",
+      "config",
+      "node_modules",
+      "build",
+      "public"
     ]
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+      "defaults"
     ],
     "development": [
       "last 1 chrome version",
@@ -144,6 +167,7 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.195"
+    "@types/lodash": "^4.14.195",
+    "gh-pages": "^5.0.0"
   }
 }
