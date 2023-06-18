@@ -1,6 +1,8 @@
-import React, {forwardRef, memo, useCallback, useEffect, useState} from 'react';
-import {CanvasProps} from "../../Canvas.types";
-import {withCanvasProps} from "./withImage.types";
+import React, { forwardRef, memo, useCallback, useEffect, useState } from 'react';
+
+// Type definitions
+import { CanvasProps } from '../../Canvas.types';
+import { withCanvasProps } from './withImage.types';
 
 // Instances
 const imageInstance = new Image();
@@ -8,7 +10,7 @@ const imageInstance = new Image();
 
 const withImage = (WrappedComponent: React.ForwardRefExoticComponent<React.PropsWithoutRef<CanvasProps> & React.RefAttributes<HTMLCanvasElement>>) => {
     const Component = forwardRef<HTMLCanvasElement, withCanvasProps>((props, canvasRef) => {
-        const {imageSrc, ...rest} = props;
+        const { imageSource, ...rest } = props;
 
         // State
         const [image, setImage] = useState<HTMLImageElement | null>(null);
@@ -19,17 +21,20 @@ const withImage = (WrappedComponent: React.ForwardRefExoticComponent<React.Props
         }, []);
 
 
+        // Effects
         useEffect(() => {
-            imageInstance.src = imageSrc;
+            imageInstance.src = imageSource;
             imageInstance.addEventListener('load', handleImageLoad);
 
             return () => {
                 imageInstance.removeEventListener('load', handleImageLoad);
             }
-        }, [handleImageLoad, imageSrc])
+        }, [handleImageLoad, imageSource])
 
         return <WrappedComponent ref={canvasRef} image={image} {...rest} />
     });
+
+    Component.displayName = 'ImageCanvas';
 
     return memo(Component);
 }

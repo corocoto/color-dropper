@@ -1,10 +1,10 @@
-import React, {forwardRef, memo, useEffect, useRef} from 'react';
+import React, { forwardRef, memo, MutableRefObject, useEffect, useRef } from 'react';
 
 // Type definition
-import {CanvasProps} from "./Canvas.types";
+import { CanvasProps } from './Canvas.types';
 
 // HOCs
-import {withImage} from "./hocs";
+import { withImage } from './hocs';
 
 // Libs
 import classNames from "classnames";
@@ -13,15 +13,14 @@ import classNames from "classnames";
 import styles from './Canvas.module.css'
 
 const Canvas = forwardRef<HTMLCanvasElement, CanvasProps>((props, canvasRef) => {
-    const { image, className, ...rest} = props
+    const { image, className, ...rest } = props
 
     // Refs
     const ctx = useRef<CanvasRenderingContext2D | null | undefined>(null)
 
     // Effects
     useEffect(() => {
-        // @ts-ignore
-        ctx.current = canvasRef.current.getContext('2d');
+        ctx.current = (canvasRef as MutableRefObject<HTMLCanvasElement>).current.getContext('2d');
     }, [canvasRef])
 
     useEffect(() => {
@@ -34,10 +33,14 @@ const Canvas = forwardRef<HTMLCanvasElement, CanvasProps>((props, canvasRef) => 
         <canvas
             ref={canvasRef}
             className={classNames(className, styles.canvas)}
+            width={image?.naturalWidth}
+            height={image?.naturalHeight}
             {...rest}
         />
     );
 });
+
+Canvas.displayName = 'Canvas';
 
 export default memo(Canvas);
 export const ImageCanvas = withImage(Canvas);

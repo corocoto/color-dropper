@@ -1,6 +1,11 @@
 :root {
   --black: #000;
   --white: #fff;
+  --dark-grey: #313133;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {

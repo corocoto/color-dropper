@@ -1,4 +1,4 @@
 // Type definition
-import { CanvasProps } from "../../Canvas.types";
+import { CanvasProps } from '../../Canvas.types';
 
-export type withCanvasProps = CanvasProps & { imageSrc: string };
+export type withCanvasProps = CanvasProps & { imageSource: string };

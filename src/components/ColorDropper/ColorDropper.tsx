@@ -4,18 +4,25 @@ import React, {useState, memo, useCallback, useEffect, useRef} from 'react';
 import {MagnifierGlass, IconButton} from "../index";
 
 // Images
-import IconColorPicker from "../../assets/IconColorPicker.svg";
+import IconColorPicker from "./assets/IconColorPicker.svg";
 
 // Type definition
-import {ColorDropperProps} from "./ColorDropper.types";
+import { ColorDropperProps } from "./ColorDropper.types";
 
 // Utils
-import {getCursorPosition} from "./utils";
+import { getCursorPosition } from "./utils";
 
-import set from 'lodash/set';
+// Constants
+import { ESC_BUTTON_NAME } from './constants';
+
+// Styles
+import variables from './components/MagnifierGlass/MagnifierGlassVariables.module.css'
+
+const borderWidth = parseFloat(variables.glassBorderWidth);
+
 
 const ColorDropper = (props: ColorDropperProps) => {
-    const {zoom, zoomingImage, canvasRef} = props
+    const { zoom, zoomingImage, canvasRef } = props
 
     // State
     const [isActive, setIsActive] = useState(false);
@@ -23,10 +30,10 @@ const ColorDropper = (props: ColorDropperProps) => {
         width: 0,
         height: 0
     });
-    const [selectedColor, setSelectedColor] = useState(null);
 
     // Refs
     const glassRef = useRef<HTMLDivElement>(null);
+    const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
     // Handlers
     const handleButtonClick = useCallback(() => {
@@ -37,12 +44,12 @@ const ColorDropper = (props: ColorDropperProps) => {
         console.log(event);
         event.preventDefault();
 
-        if (!canvasRef.current || !glassRef.current) {
+        if (!canvasRef.current || !glassRef.current || !ctxRef.current) {
             return;
         }
 
         const glassRadius = glassRef.current.offsetWidth / 2;
-        let {x, y} = getCursorPosition(event, canvasRef.current);
+        let { x, y } = getCursorPosition(event, canvasRef.current);
 
         /* Prevent the magnifier glass from being positioned outside the image: */
         if (x > canvasSize.width - glassRadius / zoom) {
@@ -61,16 +68,9 @@ const ColorDropper = (props: ColorDropperProps) => {
         glassRef.current.style.left = `${x - glassRadius}px`;
         glassRef.current.style.top = `${(y - glassRadius / 2)}px`;
 
-        // TODO: Move to css module ant import it
-        const borderWidth = 3;
-
         glassRef.current.style.backgroundPosition = `-${(x * zoom - glassRadius + borderWidth) * 1.5}px -${(y * zoom - glassRadius + borderWidth) * 1.6}px`;
 
-        const c = canvasRef.current.getContext('2d', { willReadFrequently: true });
-
-        // TODO; Should to debug
-        // @ts-ignore
-        const [r, g, b, ] = c?.getImageData(x * 1.97, y  * 2.13, 1, 1).data;
+        const [r, g, b, ] = ctxRef.current.getImageData(x * 1.97, y  * 2.13, 1, 1).data;
 
         glassRef.current.style.border = `2px solid rgb(${r} ${g} ${b})`
 
@@ -84,12 +84,16 @@ const ColorDropper = (props: ColorDropperProps) => {
     }, [canvasRef])
 
     const handleCloseGlassByKeyPress = useCallback((event: KeyboardEvent) => {
-        if(event.code === 'Escape') {
+        if(event.code === ESC_BUTTON_NAME) {
             setIsActive(false);
         }
     }, [])
 
     // Effects
+    useEffect(() => {
+        ctxRef.current = canvasRef.current?.getContext('2d', { willReadFrequently: true }) ?? null;
+    }, [canvasRef]);
+
     useEffect(() => {
         window.addEventListener('resize', handleUpdateCanvasParamSize);
         window.addEventListener('keydown', handleCloseGlassByKeyPress);

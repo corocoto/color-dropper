@@ -1,0 +1,7 @@
+:root {
+    --glass-border-width: 3px;
+}
+
+:export {
+    glassBorderWidth: 3px
+}

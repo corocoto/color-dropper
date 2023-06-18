@@ -1,3 +1,5 @@
+@import 'MagnifierGlassVariables.module.css';
+
 .magnifierGlass {
     position: absolute;
     border-radius: 50%;
@@ -5,6 +7,7 @@
     height: 150px;
     background-repeat: no-repeat;
     cursor: pointer;
+    border: var(--glass-border-width) solid var(--magnifier-glass-border-color, --black);
 }
 
 .magnifierGlass::before {
@@ -16,7 +19,7 @@
     border-radius: 50%;
     background-color: var(--white);
     opacity: 0.2;
-    background-image:  linear-gradient(#313133 0.6px, transparent 0.6px), linear-gradient(to right, #313133 0.6px, var(--white) 0.6px);
+    background-image:  linear-gradient(var(--dark-grey) 0.6px, transparent 0.6px), linear-gradient(to right, var(--dark-grey) 0.6px, var(--white) 0.6px);
     background-size: 8px 8px;
 }
 

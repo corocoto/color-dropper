@@ -1,15 +1,15 @@
-import React, {useRef} from 'react';
+import React, { useRef } from 'react';
 
 // Styles
 import styles from './App.module.css';
 
 // Components
-import {ColorDropper, ImageCanvas} from "../index";
+import { ColorDropper, ImageCanvas } from '../index';
 
 // Images
 import image from '../../assets/1920x1080-4598441-beach-water-pier-tropical-sky-sea-clouds-island-palm-trees.jpg';
 
-function App() {
+const App = () => {
     // Refs
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -18,9 +18,11 @@ function App() {
         <header className={styles.header}>
             <ColorDropper zoom={3} zoomingImage={image} canvasRef={canvasRef}/>
         </header>
-        <ImageCanvas ref={canvasRef} imageSrc={image} width={1920} height={1080} className={styles.canvas}/>
+        <ImageCanvas ref={canvasRef} imageSource={image} className={styles.canvas}/>
     </main>
   );
 }
+
+App.displayName = 'App';
 
 export default App;
