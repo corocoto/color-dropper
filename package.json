@@ -14,7 +14,7 @@
   "bugs": {
     "url": "https://github.com/corocoto/color-dropper/issues"
   },
-  "homepage": "https://github.com/corocoto/color-dropper",
+  "homepage": "https://corocoto.github.io/color-dropper",
   "dependencies": {
     "@babel/core": "^7.16.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
