@@ -12,6 +12,8 @@ import {ColorDropperProps} from "./ColorDropper.types";
 // Utils
 import {getCursorPosition} from "./utils";
 
+import set from 'lodash/set';
+
 const ColorDropper = (props: ColorDropperProps) => {
     const {zoom, zoomingImage, canvasRef} = props
 
@@ -21,6 +23,7 @@ const ColorDropper = (props: ColorDropperProps) => {
         width: 0,
         height: 0
     });
+    const [selectedColor, setSelectedColor] = useState(null);
 
     // Refs
     const glassRef = useRef<HTMLDivElement>(null);
@@ -31,6 +34,7 @@ const ColorDropper = (props: ColorDropperProps) => {
     }, []);
 
     const handleMove = useCallback((event: MouseEvent | TouchEvent) => {
+        console.log(event);
         event.preventDefault();
 
         if (!canvasRef.current || !glassRef.current) {
@@ -53,12 +57,23 @@ const ColorDropper = (props: ColorDropperProps) => {
         if (y < glassRadius / zoom) {
             y = glassRadius / zoom;
         }
-        glassRef.current.style.left = `${x - glassRadius}px`;
-        glassRef.current.style.top = `${y - glassRadius}px`;
 
+        glassRef.current.style.left = `${x - glassRadius}px`;
+        glassRef.current.style.top = `${(y - glassRadius / 2)}px`;
+
+        // TODO: Move to css module ant import it
         const borderWidth = 3;
-        /* Display what the magnifier glass "sees": */
-        glassRef.current.style.backgroundPosition = `-${(x * zoom - glassRadius + borderWidth) * 1.5}px -${(y * zoom - glassRadius + borderWidth) * 1.5}px`;
+
+        glassRef.current.style.backgroundPosition = `-${(x * zoom - glassRadius + borderWidth) * 1.5}px -${(y * zoom - glassRadius + borderWidth) * 1.6}px`;
+
+        const c = canvasRef.current.getContext('2d', { willReadFrequently: true });
+
+        // TODO; Should to debug
+        // @ts-ignore
+        const [r, g, b, ] = c?.getImageData(x * 1.97, y  * 2.13, 1, 1).data;
+
+        glassRef.current.style.border = `2px solid rgb(${r} ${g} ${b})`
+
     }, [canvasRef, canvasSize.height, canvasSize.width, zoom]);
 
     const handleUpdateCanvasParamSize = useCallback(() => {

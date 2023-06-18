@@ -14,14 +14,12 @@ const MagnifierGlass = forwardRef<HTMLDivElement, MagnifierGlassProps>((props, d
         return {
             backgroundImage: `url('${imageSource}')`,
             backgroundSize:
-            imageWidth * zoom + imageHeight * zoom
+            imageWidth * zoom + imageHeight * zoom,
         }
     }, [imageHeight, imageSource, imageWidth, zoom]);
 
     return (
-        <div ref={divRef} style={inlineStyles} className={styles.magnifierGlass} {...rest}>
-            <div className={styles.grid}></div>
-        </div>
+        <div ref={divRef} style={inlineStyles} className={styles.magnifierGlass} {...rest} />
     )
 })
 

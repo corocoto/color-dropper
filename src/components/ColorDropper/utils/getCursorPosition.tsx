@@ -15,8 +15,8 @@ const getCursorPosition = (event: MouseEvent | TouchEvent, canvas: HTMLCanvasEle
     }
 
     /* Consider any page scrolling: */
-    x -= window.pageXOffset;
-    y -= window.pageYOffset;
+    x -= window.scrollX;
+    y -= window.scrollY;
 
     return { x, y };
 }
