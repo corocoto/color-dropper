@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/corocoto/color-dropper/static/css/main.d0f45612.css",
+    "main.js": "/corocoto/color-dropper/static/js/main.f86ae89c.js",
+    "static/js/787.fe816ba8.chunk.js": "/corocoto/color-dropper/static/js/787.fe816ba8.chunk.js",
+    "static/media/1920x1080-4598441-beach-water-pier-tropical-sky-sea-clouds-island-palm-trees.jpg": "/corocoto/color-dropper/static/media/1920x1080-4598441-beach-water-pier-tropical-sky-sea-clouds-island-palm-trees.05adec8cea7656a6848c.jpg",
+    "static/media/IconColorPicker.svg": "/corocoto/color-dropper/static/media/IconColorPicker.c8108e0f2b1e0adabefa84dd30031744.svg",
+    "index.html": "/corocoto/color-dropper/index.html",
+    "main.d0f45612.css.map": "/corocoto/color-dropper/static/css/main.d0f45612.css.map",
+    "main.f86ae89c.js.map": "/corocoto/color-dropper/static/js/main.f86ae89c.js.map",
+    "787.fe816ba8.chunk.js.map": "/corocoto/color-dropper/static/js/787.fe816ba8.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d0f45612.css",
+    "static/js/main.f86ae89c.js"
+  ]
+}
