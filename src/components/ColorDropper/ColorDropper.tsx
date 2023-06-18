@@ -1,16 +1,16 @@
-import React, {useState, memo, useCallback, useEffect, useRef} from 'react';
+import React, { useState, memo, useCallback, useEffect, useRef } from 'react';
 
 // Component
-import {MagnifierGlass, IconButton} from "../index";
+import { MagnifierGlass, IconButton } from '../index';
 
 // Images
-import IconColorPicker from "./assets/IconColorPicker.svg";
+import IconColorPicker from './assets/IconColorPicker.svg';
 
 // Type definition
-import { ColorDropperProps } from "./ColorDropper.types";
+import {ColorDropperProps, UpdateGlassPosition} from './ColorDropper.types';
 
 // Utils
-import { getCursorPosition } from "./utils";
+import { rgbToHex, getGlassCoordinates } from './utils';
 
 // Constants
 import { ESC_BUTTON_NAME } from './constants';
@@ -18,18 +18,19 @@ import { ESC_BUTTON_NAME } from './constants';
 // Styles
 import variables from './components/MagnifierGlass/MagnifierGlassVariables.module.css'
 
+// HOCs
+import { withCanvasSize } from './hocs';
+
+// Libs
+import compose from 'lodash/fp/compose';
+
 const borderWidth = parseFloat(variables.glassBorderWidth);
 
-
 const ColorDropper = (props: ColorDropperProps) => {
-    const { zoom, zoomingImage, canvasRef } = props
+    const { zoom, zoomingImage, canvasRef, canvasSize } = props
 
     // State
     const [isActive, setIsActive] = useState(false);
-    const [canvasSize, setCanvasSize] = useState({
-        width: 0,
-        height: 0
-    });
 
     // Refs
     const glassRef = useRef<HTMLDivElement>(null);
@@ -40,48 +41,33 @@ const ColorDropper = (props: ColorDropperProps) => {
         setIsActive(prevState => !prevState);
     }, []);
 
-    const handleMove = useCallback((event: MouseEvent | TouchEvent) => {
-        console.log(event);
-        event.preventDefault();
+    const updateGlassPosition = useCallback(({glass, updatedX, updatedY, glassRadius}: UpdateGlassPosition) => {
+        glass.style.left = `${updatedX - glassRadius}px`;
+        glass.style.top = `${(updatedY - glassRadius / 2)}px`;
 
+        glass.style.backgroundPosition = `-${(updatedX * zoom - glassRadius + borderWidth) * 1.5}px -${(updatedY * zoom - glassRadius + borderWidth) * 1.6}px`;
+    }, [zoom]);
+
+    const handleMove = useCallback((event: MouseEvent | TouchEvent) => {
+        event.preventDefault();
         if (!canvasRef.current || !glassRef.current || !ctxRef.current) {
             return;
         }
 
         const glassRadius = glassRef.current.offsetWidth / 2;
-        let { x, y } = getCursorPosition(event, canvasRef.current);
+        const { x, y } = getGlassCoordinates({
+            moveEvent: event,
+            canvas: canvasRef.current,
+            canvasSize,
+            glassRadius,
+            zoom
+        });
+        updateGlassPosition({ glass: glassRef.current, updatedX: x, updatedY: y, glassRadius });
 
-        /* Prevent the magnifier glass from being positioned outside the image: */
-        if (x > canvasSize.width - glassRadius / zoom) {
-            x = canvasSize.width - glassRadius / zoom;
-        }
-        if (x < glassRadius / zoom) {
-            x = glassRadius / zoom;
-        }
-        if (y > canvasSize.height - glassRadius / zoom) {
-            y = canvasSize.height - glassRadius / zoom;
-        }
-        if (y < glassRadius / zoom) {
-            y = glassRadius / zoom;
-        }
-
-        glassRef.current.style.left = `${x - glassRadius}px`;
-        glassRef.current.style.top = `${(y - glassRadius / 2)}px`;
-
-        glassRef.current.style.backgroundPosition = `-${(x * zoom - glassRadius + borderWidth) * 1.5}px -${(y * zoom - glassRadius + borderWidth) * 1.6}px`;
-
-        const [r, g, b, ] = ctxRef.current.getImageData(x * 1.97, y  * 2.13, 1, 1).data;
-
-        glassRef.current.style.border = `2px solid rgb(${r} ${g} ${b})`
-
-    }, [canvasRef, canvasSize.height, canvasSize.width, zoom]);
-
-    const handleUpdateCanvasParamSize = useCallback(() => {
-        setCanvasSize({
-            width: canvasRef.current?.offsetWidth ?? 0,
-            height: canvasRef.current?.offsetHeight ?? 0
-        })
-    }, [canvasRef])
+        const [r, g, b,] = ctxRef.current.getImageData(x * 1.97, y  * 2.13, 1, 1).data;
+        const hexColor = rgbToHex(r, g, b);
+        glassRef.current.style.border = `2px solid ${hexColor}`;
+    }, [canvasRef, canvasSize, updateGlassPosition, zoom]);
 
     const handleCloseGlassByKeyPress = useCallback((event: KeyboardEvent) => {
         if(event.code === ESC_BUTTON_NAME) {
@@ -95,29 +81,23 @@ const ColorDropper = (props: ColorDropperProps) => {
     }, [canvasRef]);
 
     useEffect(() => {
-        window.addEventListener('resize', handleUpdateCanvasParamSize);
         window.addEventListener('keydown', handleCloseGlassByKeyPress);
-
         return () => {
-            window.removeEventListener('resize', handleUpdateCanvasParamSize);
             window.removeEventListener('keydown', handleCloseGlassByKeyPress);
         }
-    }, [handleCloseGlassByKeyPress, handleUpdateCanvasParamSize]);
+    }, [handleCloseGlassByKeyPress]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
 
-        canvas?.addEventListener("mousemove", handleMove);
-        canvas?.addEventListener("touchmove", handleMove);
-
-        handleUpdateCanvasParamSize();
+        canvas?.addEventListener('mousemove', handleMove);
+        canvas?.addEventListener('touchmove', handleMove);
 
         return () => {
-            canvas?.removeEventListener("mousemove", handleMove);
-            canvas?.removeEventListener("touchmove", handleMove);
+            canvas?.removeEventListener('mousemove', handleMove);
+            canvas?.removeEventListener('touchmove', handleMove);
         }
-    }, [canvasRef, handleMove, handleUpdateCanvasParamSize]);
-
+    }, [canvasRef, handleMove]);
 
     return (
         <>
@@ -139,4 +119,4 @@ const ColorDropper = (props: ColorDropperProps) => {
 
 ColorDropper.displayName = 'ColorDropper';
 
-export default memo(ColorDropper);
+export default compose(withCanvasSize, memo)(ColorDropper);
