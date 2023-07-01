@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 
 // Styles
 import styles from './App.module.css';
@@ -26,10 +26,12 @@ const App = () => {
 
     // Effects
     useEffect(() => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         window.addEventListener(PICK_COLOR_EVENT_NAME, handlePickColor);
         return () => {
-            // @ts-ignore
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
             window.removeEventListener(PICK_COLOR_EVENT_NAME, handlePickColor);
         }
     },[handlePickColor])

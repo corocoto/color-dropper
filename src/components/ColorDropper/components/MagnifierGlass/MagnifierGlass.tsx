@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import { forwardRef, memo, useMemo } from 'react';
 
 // Styles
 import styles from './MagnifierGlass.module.css';
