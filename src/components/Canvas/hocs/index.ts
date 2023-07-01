@@ -1,1 +1,1 @@
-export { default as withImage } from './withImage';
+export { default as withImage } from './withImage'

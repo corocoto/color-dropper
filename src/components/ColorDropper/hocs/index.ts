@@ -1,1 +1,1 @@
-export { default as withCanvasSize } from './withCanvasSize';
+export { default as withCanvasSize } from './withCanvasSize'

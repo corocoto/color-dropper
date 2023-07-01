@@ -1,7 +1,7 @@
-import {RefObject} from "react";
+import { RefObject } from 'react'
 
 export type WithCanvasSizeProps = {
-    zoom: number;
-    zoomingImage: string;
-    canvasRef: RefObject<HTMLCanvasElement>
+  zoom: number
+  zoomingImage: string
+  canvasRef: RefObject<HTMLCanvasElement>
 }

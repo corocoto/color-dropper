@@ -1,2 +1,2 @@
-export {default as IconButton} from './IconButton';
-export {default as MagnifierGlass} from './MagnifierGlass';
+export { default as IconButton } from './IconButton'
+export { default as MagnifierGlass } from './MagnifierGlass'

@@ -1,1 +1,1 @@
-export {default} from './ColorDropper';
+export { default } from './ColorDropper'
