@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, MutableRefObject, useEffect, useRef } from 'react';
+import { forwardRef, memo, MutableRefObject, useEffect, useRef } from 'react';
 
 // Type definition
 import { CanvasProps } from './Canvas.types';
