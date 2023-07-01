@@ -1,7 +1,7 @@
 :root {
-    --glass-border-width: 3px;
+  --glass-border-width: 3px;
 }
 
 :export {
-    glassBorderWidth: 3px
+  glassBorderWidth: 3px;
 }

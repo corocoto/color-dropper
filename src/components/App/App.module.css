@@ -1,25 +1,25 @@
 .wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    position: relative;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    width: 960px;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  width: 960px;
+  height: 100%;
 }
 
 .header {
-    position: relative;
-    float: left;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
+  position: relative;
+  float: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
 }
 
 .canvas {
-    width: 960px;
-    height: 465px;
+  width: 960px;
+  height: 465px;
 }

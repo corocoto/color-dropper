@@ -1,7 +1,7 @@
 .hoveredColor {
-    position: absolute;
-    top: 57%;
-    left: 52%;
-    color: var(--border-color, var(--black));
-    text-shadow: 1px 1px 1px var(--black);
+  position: absolute;
+  top: 57%;
+  left: 52%;
+  color: var(--border-color, var(--black));
+  text-shadow: 1px 1px 1px var(--black);
 }
