@@ -32,7 +32,7 @@
     "prettier:format": "prettier --write ./src/**/*.{css,ts,tsx}",
     "prettier:check": "prettier --check ./src/**/*.{css,ts,tsx}",
     "editorconfig:check": "editorconfig-checker",
-    "lint": "npm run editorconfig:check && npm run eslint:check && npm run prettier:check && npm run tsk:check",
+    "lint": "npm run editorconfig:check && npm run eslint:check && npm run prettier:check && npm run tsc:check",
     "prepare": "npx simple-git-hooks"
   },
   "lint-staged": {
@@ -40,14 +40,17 @@
       "editorconfig-checker"
     ],
     "*.ts": [
-      "eslint --fix --ext .js,.jsx,.ts,.tsx .",
-      "prettier --write ./src/**/*.{css,ts,tsx}",
-      "tsc -p tsconfig.json --noEmit"
+      "eslint --fix --ext .ts .",
+      "tsc -p tsconfig.json --noEmit",
+      "prettier --write ./src/**/*.ts"
     ],
     "*.tsx": [
-      "eslint --fix --ext .js,.jsx,.ts,.tsx .",
-      "prettier --write ./src/**/*.{css,ts,tsx}",
-      "tsc -p tsconfig.json --noEmit"
+      "eslint --fix --ext .tsx .",
+      "tsc -p tsconfig.json --noEmit",
+      "prettier --write ./src/**/*.tsx"
+    ],
+    "*.css": [
+      "prettier --write ./src/**/*.css"
     ]
   },
   "simple-git-hooks": {
