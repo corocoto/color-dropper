@@ -32,7 +32,8 @@
     "prettier:format": "prettier --write ./src/**/*.{css,ts,tsx}",
     "prettier:check": "prettier --check ./src/**/*.{css,ts,tsx}",
     "editorconfig:check": "editorconfig-checker",
-    "lint": "npm run editorconfig:check && npm run eslint:check && npm run prettier:check && npm run tsk:check"
+    "lint": "npm run editorconfig:check && npm run eslint:check && npm run prettier:check && npm run tsk:check",
+    "prepare": "npx simple-git-hooks"
   },
   "lint-staged": {
     "*": [
